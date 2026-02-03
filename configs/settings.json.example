@@ -1,0 +1,6 @@
+{
+  "attacker_ip": "127.0.0.1",
+  "attacker_port": 4444,
+  "protocol": "tcp",
+  "description": "Example configuration placeholder for educational reverse shell laboratory."
+}

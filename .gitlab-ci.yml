@@ -1,0 +1,46 @@
+stages:
+  - lint
+  - test
+  - security
+
+image: python:3.9-slim
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python -m venv venv
+  - source venv/bin/activate
+  - pip install flake8 pytest
+
+lint_python:
+  stage: lint
+  script:
+    - flake8 src/ tests/
+  allow_failure: false
+
+lint_bash:
+  stage: lint
+  image: koalaman/shellcheck-alpine:stable
+  before_script: []
+  script:
+    - shellcheck scripts/*.sh src/*.sh
+  allow_failure: true
+
+test_payloads:
+  stage: test
+  script:
+    - pytest tests/
+  
+security_scan:
+  stage: security
+  script:
+    - echo "Running advanced static analysis (simulated)"
+    - pip install bandit
+    - bandit -r src/ -s B404,B603 # Skipping specific warnings since these are legitimate reverse shell payloads
+  allow_failure: true
