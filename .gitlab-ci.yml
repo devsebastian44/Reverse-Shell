@@ -1,0 +1,55 @@
+# ==============================================================================
+# .gitlab-ci.yml
+# DevSecOps Pipeline para entorno de Laboratorio Privado (GitLab)
+# ==============================================================================
+
+stages:
+  - lint
+  - test
+  - security
+
+variables:
+  PYTHON_VERSION: "3.9"
+
+# ------------------------------------------------------------------------------
+# 1. Análisis Estático (Linting)
+# ------------------------------------------------------------------------------
+lint_python:
+  stage: lint
+  image: python:${PYTHON_VERSION}-slim
+  before_script:
+    - pip install flake8
+  script:
+    - echo "Ejecutando linter en scripts de Python..."
+    - flake8 src/ scripts/ --count --select=E9,F63,F7,F82 --show-source --statistics || true
+
+lint_bash:
+  stage: lint
+  image: koalaman/shellcheck-alpine
+  script:
+    - echo "Ejecutando shellcheck en scripts bash..."
+    - shellcheck src/*.sh scripts/*.sh || echo "Shellcheck encontró advertencias. (Permitido en lab)"
+
+# ------------------------------------------------------------------------------
+# 2. Pruebas Básicas
+# ------------------------------------------------------------------------------
+test_syntax:
+  stage: test
+  image: ubuntu:latest
+  script:
+    - echo "Verificando sintaxis básica de los payloads..."
+    - bash -n src/shell.sh
+    - bash -n scripts/config.sh
+
+# ------------------------------------------------------------------------------
+# 3. Análisis de Seguridad Automático
+# ------------------------------------------------------------------------------
+security_scan_bandit:
+  stage: security
+  image: python:${PYTHON_VERSION}-slim
+  before_script:
+    - pip install bandit
+  script:
+    - echo "Ejecutando escaneo SAST con Bandit..."
+    # Se permiten hallazgos porque es software de ciberseguridad ofensiva / pentesting
+    - bandit -r src/ scripts/ -ll -ii || echo "Bandit detectó código riesgoso, esperado en payloads."

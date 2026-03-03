@@ -1,0 +1,13 @@
+{
+  "c2_server": {
+    "host": "10.10.10.2",
+    "port": 4444
+  },
+  "options": {
+    "auto_reconnect": true,
+    "retry_interval_seconds": 10,
+    "hide_console": true,
+    "encryption": "None"
+  },
+  "info": "Plantilla de configuración para el entorno de laboratorio. Jamás commitear settings.json reales a Git."
+}

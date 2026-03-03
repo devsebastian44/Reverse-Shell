@@ -1,80 +1,85 @@
-## Reverse Shell
+# 🛡️ Reverse Shell & DevSecOps Strategy
 
-<p align="center">
-  <img src="./Img/Logo.png" height="300px" width="350px">
-</p>
-
-Una **reverse shell** es una técnica utilizada en ciberseguridad que permite establecer una conexión entre un atacante y una máquina objetivo, otorgando acceso remoto para ejecutar comandos. Este proyecto incluye scripts para configurar una reverse shell en **Windows** y **Linux** con fines educativos.
+Este repositorio contiene una implementación educativa de una **Reverse Shell** multiplataforma (Windows/Linux) y ejemplifica un ciclo de vida **DevSecOps** profesional, con separación estructurada entre un laboratorio de desarrollo (GitLab) y un entorno de exhibición pública (GitHub).
 
 ---
 
-## ⚙️ Requisitos
+## 🎯 Arquitectura DevSecOps (GitLab ➔ GitHub)
 
-- Linux (Ubuntu/Kali recomendado)
-- Python 3.8 o superior
-- Visual Studio Code (para edición en Windows)
-- Netcat (para escuchar conexiones en Linux)
+Este proyecto está diseñado bajo un modelo de **Seguridad por Diseño (Security by Design)**.
+La fuente de verdad (Source of Truth) reside en un entorno de laboratorio privado (**GitLab**), que incluye los componentes críticos: automatización de CI/CD, pruebas de seguridad estáticas (SAST) y scripts de despliegue.
+
+### El flujo de publicación controlada
+
+Para garantizar que el código ofensivo y los componentes privados de automatización no queden expuestos de manera inadecuada, el proyecto emplea el script **`scripts/publish_public.ps1`**.
+
+1. **Desarrollo en main (GitLab):** El desarrollo, refactorización y battery tests ocurren en el lab privado.
+2. **Validación CI/CD:** `.gitlab-ci.yml` ejecuta linter (*flake8*, *shellcheck*) y análisis SAST (*bandit*).
+3. **Despliegue Sanitizado:** `publish_public.ps1` crea una rama efímera `public`, retira el código fuente conflictivo (`src/`), configuraciones locales y CI de GitLab, y realiza un **push forzado** a GitHub.
+4. **Resultado:** En GitHub, el repositorio actúa de portafolio limpio (diagramas, docs, README) mitigando riesgos éticos o baneos por políticas de la plataforma.
 
 ---
 
-## 🚀 Instalación
+## 📂 Estructura del Proyecto
 
-Clona el repositorio y accede al directorio:
+El proyecto está organizado profesionalmente para su escalabilidad:
+
+```text
+Reverse-Shell/
+├── src/               # Código fuente (payloads operativos - Oculto en GitHub)
+│   ├── shell.py       # Script de reverse shell en Python (Windows)
+│   ├── shell.sh       # Script de bash (Linux)
+├── scripts/           # Automatización y flujos de trabajo DevSecOps
+│   ├── config.sh              # Configuración de dependencias (pyinstaller)
+│   ├── publish_public.ps1     # Script de sanitización y despliegue a GitHub
+├── configs/           # Plantillas y configuraciones de infra (Oculto en GitHub)
+├── tests/             # Batería de pruebas automatizadas (Oculto en GitHub)
+├── docs/              # Documentación técnica, manuales y pseudocódigo
+├── diagrams/          # Diagramas de arquitectura de red y despliegue
+├── .gitlab-ci.yml     # Pipeline de DevSecOps Lab (Oculto en GitHub)
+└── .gitignore         # Control estricto de exclusión de artefactos y secretos
+```
+
+*(Nota: En el repositorio público de GitHub, varias de estas carpetas son excluidas interactivamente para cumplir el proceso de sanitización).*
+
+---
+
+## 🚀 Requisitos e Instalación
+
+> **NOTA:** Las instrucciones siguientes asumen acceso al laboratorio en GitLab, dado que en GitHub el código puede estar total o parcialmente restringido.
+
+* **Requisitos:** Linux (Kali/Ubuntu) para oyente, Python 3.8+, y/o Visual Studio Code.
+* **Componentes:** Netcat para escuchar la conexión reversa.
 
 ```bash
-git clone https://github.com/Devsebastian44/Reverse-Shell.git
+# Clonado de repositorio (Asegurarse de tener acceso al Lab)
+git clone <URL_DEL_REPOSITORIO>
 cd Reverse-Shell
+
+# Configuración inicial y requisitos de compilación de payloads
+sudo bash scripts/config.sh
 ```
 
 ---
 
-## ▶️ Uso
+## ▶️ Uso de Ejemplos en el Laboratorio
 
-En la máquina del atacante linux se debe ejecutar el siguiente comando:
+> **Advertencia de Seguridad:** Asegúrate de ejecutar esto en máquinas virtuales aisladas controladas.
 
-
-### Linux
-
-Ejecuta el archivo de configuración:
-
-```bash
-sudo chmod +x config.sh
-sudo bash config.sh
-```
-
-
-Configura la IP del atacante en `shell.py` (Windows) o `shell.sh` (Linux) dependiendo a que máquina se va atacar:
+1. Configura la IP del atacante en los payloads ubicados en `src/shell.py` (Windows) o `src/shell.sh` (Linux).
 
 <p align="center">
-  <img src="./Img/config2.png">
+  <img src="./Img/config2.png" alt="Configuración de IP">
 </p>
 
-Luego escucha la conexión con netcat en Linux (máquina atacante):
-
+2. Localmente (Máquina atacante Linux), ponte a la escucha con Netcat:
 ```bash
 nc -lvnp 4444
 ```
 
 ---
 
-## 📂 Estructura del proyecto
+## ⚠️ Declaración Ética y Legal (Disclaimer)
 
-```
-Reverse-Shell/
-│── scripts/           # Carpeta con los scripts de la reverse shell
-│   │── shell.py       # Script de reverse shell para Windows
-│   │── shell.sh       # Script de reverse shell para Linux
-│── config.sh          # Configuración inicial
-``` 
-
----
-
-## 📜 Licencia
-
-Este proyecto está bajo la licencia MIT. Puedes usarlo libremente con fines educativos y de investigación.
-
----
-
-## ⚠️ Aviso
-
-Este script ha sido desarrollado únicamente con fines **educativos y de investigación en ciberseguridad**. El uso indebido de este material puede ser **ilegal**. No me responsabilizo del mal uso ni de los daños que puedan ocasionarse por su ejecución.
+Este proyecto, sus scripts y su arquitectura han sido desarrollados **exclusivamente con fines educativos y de investigación en ciberseguridad** (Red Teaming, Malware Research y DevSecOps). 
+Queda estrictamente prohibido el uso de este material para atacar infraestructuras sin el consentimiento expreso y por escrito de sus propietarios. El creador y los colaboradores no se hacen responsables del uso indebido ni de los daños ocasionados por la ejecución de los binarios o código proporcionado.

@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant Attacker as Attacker Machine (C2)
+    participant Victim as Victim Machine (Target)
+
+    note over Attacker: Netcat Escuchando (Puerto 4444)
+    Victim->>Attacker: Inicia Conexión Reverse Shell
+    activate Attacker
+    Attacker-->>Victim: [ACK] Sesión Establecida (Túnel)
+    Attacker->>Victim: Envía Comando (ej: 'whoami')
+    activate Victim
+    Victim-->>Attacker: Ejecuta y Retorna STDOUT/STDERR
+    deactivate Victim
+    deactivate Attacker

@@ -1,0 +1,50 @@
+# ==============================================================================
+# .gitignore - Reverse Shell Project
+# Defines files and directories that should be untracked by Git.
+# Note: As per rules, no previously versioned files are ignored here.
+# ==============================================================================
+
+# Logs
+*.log
+logs/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env
+
+# Build Artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+build/
+dist/
+*.egg-info/
+
+# Credentials & Secrets (Never commit these!)
+*.key
+*.pem
+.env.secret
+credentials.json
+secrets.yml
+
+# Backups and temporary files
+*.bak
+*.swp
+*~
+.tmp/
+tmp/
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# DevSecOps / Testing
+coverage.xml
+.coverage
+htmlcov/
+tests/reports/
