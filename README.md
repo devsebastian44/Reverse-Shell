@@ -1,5 +1,12 @@
 # 🛡️ Reverse Shell & DevSecOps Strategy
 
+![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python&logoColor=white)
+![GitLab](https://img.shields.io/badge/GitLab-Repository-orange?logo=gitlab)
+![License](https://img.shields.io/badge/License-GPL--3.0-red)
+![Status](https://img.shields.io/badge/Status-Stable-brightgreen)
+![Pentesting](https://img.shields.io/badge/Type-Pentesting-darkred)
+![Warning](https://img.shields.io/badge/⚠-Authorized%20Use%20Only-critical)
+
 Este repositorio contiene una implementación educativa de una **Reverse Shell** multiplataforma (Windows/Linux) y ejemplifica un ciclo de vida **DevSecOps** profesional, con separación estructurada entre un laboratorio de desarrollo (GitLab) y un entorno de exhibición pública (GitHub).
 
 ---
