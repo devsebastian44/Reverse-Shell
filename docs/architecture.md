@@ -13,7 +13,7 @@ El diseño de esta herramienta sigue una estrategia estándar de Comando y Contr
    - El puerto por defecto establecido en los payloads es `4444`.
    - Se utiliza generalmente `netcat` (`nc -lvnp 4444`) como socket primario para interactuar con la shell.
 
-## Flujo de Conexión (diagrams/connection_flow.mermaid)
+## Flujo de Conexión (diagrams/connection_flow.md)
 
 Una Reverse Shell se diferencia de una Bind Shell en que es la **víctima** quien inicia proactivamente la conexión hacia el **atacante**. Esto sortea muchas de las barreras de Firewalls tradicionales (NAT), ya que el tráfico de salida (Egress) raramente se bloquea con la misma intensidad que el tráfico entrante (Ingress).
 

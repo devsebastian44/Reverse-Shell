@@ -1,3 +1,8 @@
+# Flujo de Conexión (Reverse Shell)
+
+A continuación, se detalla el diagrama de secuencia que explica gráficamente cómo opera este Comando y Control (C2) de manera que se evada el bloqueo de tráfico de entrada comúnmente aplicado por firewalls perimetrales y puertas de enlace NAT.
+
+```mermaid
 sequenceDiagram
     participant Attacker as Attacker Machine (C2)
     participant Victim as Victim Machine (Target)
@@ -11,3 +16,4 @@ sequenceDiagram
     Victim-->>Attacker: Ejecuta y Retorna STDOUT/STDERR
     deactivate Victim
     deactivate Attacker
+```
