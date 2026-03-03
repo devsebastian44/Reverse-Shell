@@ -1,6 +1,6 @@
-# Flujo de Conexión (Reverse Shell)
+# Diagrama de Flujo de Conexión (Reverse Shell)
 
-A continuación, se detalla el diagrama de secuencia que explica gráficamente cómo opera este Comando y Control (C2) de manera que se evada el bloqueo de tráfico de entrada comúnmente aplicado por firewalls perimetrales y puertas de enlace NAT.
+Este diagrama describe la interacción entre la máquina del atacante (C2) y la máquina víctima.
 
 ```mermaid
 sequenceDiagram
@@ -17,3 +17,9 @@ sequenceDiagram
     deactivate Victim
     deactivate Attacker
 ```
+
+## Descripción del Proceso
+
+1. **Escucha:** El atacante abre un puerto (`4444` por defecto) usando herramientas como `nc`.
+2. **Conexión:** La víctima ejecuta el payload (`src/shell.py` o `src/shell.sh`) que busca activamente la IP del atacante.
+3. **Control:** Una vez establecida la conexión de salida (egress), el atacante tiene control remoto sobre la terminal de la víctima.
