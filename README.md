@@ -67,7 +67,7 @@ https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
 
 ```bash
 # Clonado de repositorio (Asegurarse de tener acceso al Lab)
-git clone <URL_DEL_REPOSITORIO>
+git clone https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
 cd Reverse-Shell
 
 # Configuración inicial y requisitos de compilación de payloads
