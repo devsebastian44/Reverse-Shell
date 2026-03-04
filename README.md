@@ -51,6 +51,13 @@ Reverse-Shell/
 
 ---
 
+## 🚀 Instalación y Acceso
+
+> [!IMPORTANT]
+> El repositorio completo con todo el código funcional está disponible en **GitLab** para acceso completo.
+
+https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
+
 ## 🚀 Requisitos e Instalación
 
 > **NOTA:** Las instrucciones siguientes asumen acceso al laboratorio en GitLab, dado que en GitHub el código puede estar total o parcialmente restringido.
