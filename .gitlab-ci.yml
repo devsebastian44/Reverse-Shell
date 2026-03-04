@@ -31,15 +31,24 @@ lint_bash:
     - shellcheck src/*.sh scripts/*.sh || echo "Shellcheck encontró advertencias. (Permitido en lab)"
 
 # ------------------------------------------------------------------------------
-# 2. Pruebas Básicas
+# 2. Pruebas Automatizadas
 # ------------------------------------------------------------------------------
-test_syntax:
+test_syntax_bash:
   stage: test
   image: ubuntu:latest
   script:
-    - echo "Verificando sintaxis básica de los payloads..."
+    - echo "Verificando sintaxis básica de los scripts bash..."
     - bash -n src/shell.sh
     - bash -n scripts/config.sh
+
+test_python:
+  stage: test
+  image: python:${PYTHON_VERSION}-slim
+  before_script:
+    - pip install pytest
+  script:
+    - echo "Ejecutando batería de pruebas Python..."
+    - pytest tests/ -v
 
 # ------------------------------------------------------------------------------
 # 3. Análisis de Seguridad Automático

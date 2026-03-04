@@ -11,82 +11,75 @@ Este repositorio contiene una implementación educativa de una **Reverse Shell**
 
 ---
 
-## 🎯 Arquitectura DevSecOps (GitLab ➔ GitHub)
+## 🎯 Objetivo Técnico y Profesional
 
-Este proyecto está diseñado bajo un modelo de **Seguridad por Diseño (Security by Design)**.
-La fuente de verdad (Source of Truth) reside en un entorno de laboratorio privado (**GitLab**), que incluye los componentes críticos: automatización de CI/CD, pruebas de seguridad estáticas (SAST) y scripts de despliegue.
-
-### El flujo de publicación controlada
-
-Para garantizar que el código ofensivo y los componentes privados de automatización no queden expuestos de manera inadecuada, el proyecto emplea el script **`scripts/publish_public.ps1`**.
-
-1. **Desarrollo en main (GitLab):** El desarrollo, refactorización y battery tests ocurren en el lab privado.
-2. **Validación CI/CD:** `.gitlab-ci.yml` ejecuta linter (*flake8*, *shellcheck*) y análisis SAST (*bandit*).
-3. **Despliegue Sanitizado:** `publish_public.ps1` crea una rama efímera `public`, retira el código fuente conflictivo (`src/`), configuraciones locales y CI de GitLab, y realiza un **push forzado** a GitHub.
-4. **Resultado:** En GitHub, el repositorio actúa de portafolio limpio (diagramas, docs, README) mitigando riesgos éticos o baneos por políticas de la plataforma.
+El objetivo de este proyecto es dual:
+1. Proveer una herramienta funcional para laboratorios de Red Teaming y Pentesting (Reverse Shell).
+2. Demostrar una arquitectura **DevSecOps** madura, enfocada en la publicación segura de artefactos sensibles, pipelines CI/CD de análisis de seguridad y código (SAST, Linting) y separación lógica de entornos mediante estrategias de Git.
 
 ---
 
-## 📂 Estructura del Proyecto
+## 🏗️ Arquitectura del Repositorio
 
-El proyecto está organizado profesionalmente para su escalabilidad:
+El proyecto está organizado profesionalmente para escalar garantizando el menor riesgo operativo:
 
 ```text
 Reverse-Shell/
-├── src/               # Código fuente (payloads operativos - Oculto en GitHub)
-│   ├── shell.py       # Script de reverse shell en Python (Windows)
-│   ├── shell.sh       # Script de bash (Linux)
-├── scripts/           # Automatización y flujos de trabajo DevSecOps
-│   ├── config.sh              # Configuración de dependencias (pyinstaller)
-│   ├── publish_public.ps1     # Script de sanitización y despliegue a GitHub
-├── configs/           # Plantillas y configuraciones de infra (Oculto en GitHub)
-├── tests/             # Batería de pruebas automatizadas (Oculto en GitHub)
-├── docs/              # Documentación técnica, manuales y pseudocódigo
-├── diagrams/          # Diagramas de arquitectura de red y despliegue
-├── .gitlab-ci.yml     # Pipeline de DevSecOps Lab (Oculto en GitHub)
+├── src/               # Código fuente (Payloads operativos de la reverse shell)
+├── scripts/           # Automatización y scripts de DevSecOps (ej. publish_public.ps1)
+├── configs/           # Plantillas y configuraciones de infra
+├── tests/             # Batería de pruebas automatizadas (Unitarias, funcionales)
+├── docs/              # Documentación técnica, manuales de arquitectura y pseudocódigo
+├── diagrams/          # Diagramas de arquitectura en Markdown
+├── .gitlab-ci.yml     # Pipeline DevSecOps privado
 └── .gitignore         # Control estricto de exclusión de artefactos y secretos
 ```
 
-*(Nota: En el repositorio público de GitHub, varias de estas carpetas son excluidas interactivamente para cumplir el proceso de sanitización).*
+*(Nota: Ciertas carpetas como `src/`, `tests/`, y configuraciones quedan reservadas exclusivamente para el entorno privado y automatizado).*
 
 ---
 
-## 🚀 Instalación y Acceso
+## 🔒 Flujo DevSecOps: GitLab ➔ GitHub
+
+El proyecto se rige por un pipeline de **Seguridad por Diseño (Security by Design)** que divide el código en dos planos: el Laboratorio Privado (GitLab) como la "Fuente de la Verdad", y el Portafolio Público (GitHub) como presentación sanitizada.
+
+### Script de Publicación: `publish_public.ps1`
+Ubicado en la carpeta `scripts/`, este script gestiona la promoción del código hacia plataformas públicas mitigando riesgos éticos y problemas de baneos o exposición de secretos:
+
+1. **Desarrollo en main (GitLab):** El código completo, tests unitarios y la automatización CI residen de forma privada.
+2. **Validación CI/CD:** GitLab CI ejecuta linting (*flake8*, *shellcheck*), pruebas en `tests/` con *pytest* y análisis SAST mediante *bandit*.
+3. **Despliegue Sanitizado (`publish_public.ps1`):** 
+   - Genera una rama intermedia efímera.
+   - **Eliminación Intencionada:** Remueve código ofensivo crítico (`src/`), configuraciones locales/sensibles (`configs/`), lógica de despliegue interno (`scripts/`), y los pipelines CI (`.gitlab-ci.yml` y `tests/`).
+4. **Push Forzado a GitHub:** La variante segura, conteniendo solo arquitectura, dependencias abstractas, `docs/` y el README, es sincronizada forzosamente.
+
+**Justificación Profesional:** Exhibir código ofensivo completo puede romper políticas de plataformas e incrementar la superficie de ataque accidental. Esta estrategia aísla el conocimiento arquitectónico del ejecutable accionable.
+
+---
+
+## 🚀 Uso e Instalación (Entorno Privado)
 
 > [!IMPORTANT]
-> El repositorio completo con todo el código funcional está disponible en **GitLab** para acceso completo.
+> El repositorio completo con todo el código funcional (tests, src, binarios construíbles) está disponible operativamente en **GitLab** para su análisis y ejecución integral.
 
-https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
+### Instalación Básica
 
-## 🚀 Requisitos e Instalación
-
-> **NOTA:** Las instrucciones siguientes asumen acceso al laboratorio en GitLab, dado que en GitHub el código puede estar total o parcialmente restringido.
-
-* **Requisitos:** Linux (Kali/Ubuntu) para oyente, Python 3.8+, y/o Visual Studio Code.
-* **Componentes:** Netcat para escuchar la conexión reversa.
+* **Requisitos (Oyente):** Linux (Kali/Ubuntu), Python 3.9+, Netcat.
 
 ```bash
-# Clonado de repositorio (Asegurarse de tener acceso al Lab)
+# Acceso exclusivo desde el pipeline / entorno controlado de GitLab
 git clone https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
 cd Reverse-Shell
 
-# Configuración inicial y requisitos de compilación de payloads
+# Configuración inicial
 sudo bash scripts/config.sh
 ```
 
----
+### Ejecución de Laboratorio
+> **Advertencia:** Ejecutar exclusivamente en máquinas virtuales aisladas.
 
-## ▶️ Uso de Ejemplos en el Laboratorio
-
-> **Advertencia de Seguridad:** Asegúrate de ejecutar esto en máquinas virtuales aisladas controladas.
-
-1. Configura la IP del atacante en los payloads ubicados en `src/shell.py` (Windows) o `src/shell.sh` (Linux).
-
-<p align="center">
-  <img src="./Img/config2.png" alt="Configuración de IP">
-</p>
-
-2. Localmente (Máquina atacante Linux), ponte a la escucha con Netcat:
+1. Configurar IP / Puerto del Atacante.
+2. Iniciar el listener:
 ```bash
 nc -lvnp 4444
 ```
@@ -95,5 +88,5 @@ nc -lvnp 4444
 
 ## ⚠️ Declaración Ética y Legal (Disclaimer)
 
-Este proyecto, sus scripts y su arquitectura han sido desarrollados **exclusivamente con fines educativos y de investigación en ciberseguridad** (Red Teaming, Malware Research y DevSecOps). 
-Queda estrictamente prohibido el uso de este material para atacar infraestructuras sin el consentimiento expreso y por escrito de sus propietarios. El creador y los colaboradores no se hacen responsables del uso indebido ni de los daños ocasionados por la ejecución de los binarios o código proporcionado.
+Este proyecto, sus scripts operativos y su arquitectura han sido desarrollados **exclusivamente con fines educativos y de investigación en ciberseguridad** (Red Teaming, Malware Research y DevSecOps). 
+Queda estrictamente prohibido el uso de este material para atacar infraestructuras sin el consentimiento expreso y documentado de sus propietarios. Los autores no asumen responsabilidad frente uso negligente, ilícito o no autorizado de ninguna de las partes del código proporcionadas.
