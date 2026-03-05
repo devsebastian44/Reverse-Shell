@@ -41,19 +41,22 @@ Reverse-Shell/
 
 ## 🔒 Flujo DevSecOps: GitLab ➔ GitHub
 
-El proyecto se rige por un pipeline de **Seguridad por Diseño (Security by Design)** que divide el código en dos planos: el Laboratorio Privado (GitLab) como la "Fuente de la Verdad", y el Portafolio Público (GitHub) como presentación sanitizada.
+El proyecto se rige por un pipeline de **Seguridad por Diseño (Security by Design)** que divide el código en dos planos: el **Laboratorio Público (GitLab)** como la "Fuente de la Verdad" que contiene todo el código funcional, y el **Portafolio Público (GitHub)** como presentación arquitectónica.
 
 ### Script de Publicación: `publish_public.ps1`
 Ubicado en la carpeta `scripts/`, este script gestiona la promoción del código hacia plataformas públicas mitigando riesgos éticos y problemas de baneos o exposición de secretos:
 
-1. **Desarrollo en main (GitLab):** El código completo, tests unitarios y la automatización CI residen de forma privada.
+1. **Desarrollo en main (GitLab):** El código completo, tests unitarios y la automatización CI residen de forma **pública** como laboratorio educativo.
+
 2. **Validación CI/CD:** GitLab CI ejecuta linting (*flake8*, *shellcheck*), pruebas en `tests/` con *pytest* y análisis SAST mediante *bandit*.
+
 3. **Despliegue Sanitizado (`publish_public.ps1`):** 
    - Genera una rama intermedia efímera.
    - **Eliminación Intencionada:** Remueve código ofensivo crítico (`src/`), configuraciones locales/sensibles (`configs/`), lógica de despliegue interno (`scripts/`), y los pipelines CI (`.gitlab-ci.yml` y `tests/`).
+
 4. **Push Forzado a GitHub:** La variante segura, conteniendo solo arquitectura, dependencias abstractas, `docs/` y el README, es sincronizada forzosamente.
 
-**Justificación Profesional:** Exhibir código ofensivo completo puede romper políticas de plataformas e incrementar la superficie de ataque accidental. Esta estrategia aísla el conocimiento arquitectónico del ejecutable accionable.
+**Justificación Profesional:** El repositorio de GitLab funciona como **laboratorio público completo** donde todo el código es accesible para análisis educativo, mientras que GitHub sirve como portafolio arquitectónico que demuestra las mejores prácticas de DevSecOps sin exponer funcionalidades críticas que podrían violar políticas de plataformas.
 
 ---
 
@@ -61,6 +64,8 @@ Ubicado en la carpeta `scripts/`, este script gestiona la promoción del código
 
 > [!IMPORTANT]
 > El repositorio completo con todo el código funcional (tests, src, binarios construíbles) está disponible operativamente en **GitLab** para su análisis y ejecución integral.
+
+https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
 
 ### Instalación Básica
 
