@@ -23,7 +23,7 @@ El proyecto se rige por una **estrategia DevSecOps dual**: el código operativo 
 
 - **Reverse Shell TCP** implementada en Python mediante los módulos `socket` y `subprocess`, con soporte para comunicación bidireccional entre cliente y listener
 - **Soporte multiplataforma**: payloads funcionales tanto para Windows 10 (scripts Batch/PowerShell) como para entornos Linux (Bash/Shell)
-- **Pipeline CI/CD de seguridad** en GitLab con etapas de linting (`flake8`, `shellcheck`), pruebas funcionales (`pytest`) y análisis estático de seguridad (`bandit`)
+- **Pipeline CI/CD de seguridad** en GitLab con etapas de linting (`ruff`, `shellcheck`), validación de secretos, pruebas funcionales (`pytest`) y análisis estático (`bandit`)
 - **Script de publicación sanitizada** (`publish_public.ps1`) que genera ramas efímeras, expurga código ofensivo y sincroniza únicamente artefactos seguros hacia GitHub
 - **Suite de pruebas automatizadas** en `tests/` basada en `pytest` para verificar el comportamiento funcional de los módulos Python
 - **Documentación técnica estructurada** en `docs/` con pseudocódigo y manuales de arquitectura
@@ -41,10 +41,11 @@ El proyecto se rige por una **estrategia DevSecOps dual**: el código operativo 
 | Scripting Windows (payload) | Batch (.bat) | Ejecución y persistencia del agente en Windows 10 |
 | Scripting Linux | Bash (.sh) | Configuración del entorno y listener en sistemas Unix |
 | Listener de red | Netcat (`nc`) | Receptor de conexiones inversas TCP |
-| Análisis estático (SAST) | Bandit | Detección de vulnerabilidades en código Python |
-| Linting Python | Flake8 | Verificación de estilo y errores sintácticos |
+| Análisis estático (SAST) | Bandit / Detect-Secrets | Detección de vulnerabilidades y secretos en código |
+| Linting / Format Python | Ruff | Linter ultrarrápido y formateador de código |
 | Linting Shell | Shellcheck | Análisis estático de scripts Bash |
 | Testing | Pytest | Suite de pruebas funcionales automatizadas |
+| Code Quality | Pre-commit | Pipeline local automático antes de cada commit |
 | CI/CD | GitLab CI (`.gitlab-ci.yml`) | Pipeline de integración continua y validación |
 | Control de versiones | Git (GitHub + GitLab) | Gestión de fuente con estrategia dual-repo |
 
@@ -70,21 +71,23 @@ git clone https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
 cd Reverse-Shell
 ```
 
-### Configurar el entorno
+### Configurar el entorno (Modernizado)
 
 ```bash
 # Configuración inicial del entorno (Linux)
 sudo bash scripts/config.sh
 
-# Instalar dependencias Python para pruebas y análisis
-pip install -r requirements.txt   # si existe en el entorno GitLab
+# Instalar dependencias del proyecto y herramientas de QA/Security
+pip install -e .[dev]
+
+# Activar pipeline de calidad local en Git (Ruff, Bandit, etc)
+pre-commit install
 ```
 
-### Instalar herramientas de análisis (opcional, para CI local)
+### Herramientas de sistema adicionales
 
 ```bash
-pip install flake8 bandit pytest
-apt install shellcheck   # Debian/Ubuntu
+apt install shellcheck   # Debian/Ubuntu (linting Bash)
 ```
 
 ---
@@ -117,11 +120,8 @@ Una vez que el payload se ejecuta en la víctima, la máquina atacante recibe un
 ### Ejecutar el pipeline de seguridad localmente
 
 ```bash
-# Linting Python
-flake8 src/
-
-# Análisis estático de seguridad
-bandit -r src/
+# Ejecutar pipeline completo de pre-commit (Ruff, Detect-secrets, Bandit, trailing-whitespaces) manual
+pre-commit run --all-files
 
 # Linting de scripts Bash
 shellcheck scripts/*.sh
