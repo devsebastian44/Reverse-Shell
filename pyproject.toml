@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reverse-shell"
+version = "1.0.0"
+description = "Python reverse shell implementation for Windows"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    # Required for Windows specific APIs used in src/shell.py
+    "pywin32>=306 ; sys_platform == 'win32'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pre-commit>=3.7.0",
+    "ruff>=0.4.0",
+    "bandit>=1.7.8",
+    "safety>=3.0.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "E501",  # line too long (handled by formatting)
+]
