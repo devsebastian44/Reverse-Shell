@@ -6,7 +6,7 @@ El diseño de esta herramienta sigue una estrategia estándar de Comando y Contr
 
 1. **Payload (Víctima):**
    - El código fuente reside en la carpeta `src/`.
-   - Existen dos variantes: `shell.py` (diseñado para máquinas Windows) y `shell.sh` (diseñando para ataques a sistemas Unix/Linux).
+   - El código principal reside en `src/reverse_shell.py`. Este payload es multiplataforma y está diseñado para establecer conexiones inversas desde sistemas Windows o Linux.
    - El objetivo del payload es evadir la detección inicial de consola (`hide_console_window` en Win32) y redirigir silenciosamente el `stdin`/`stdout`/`stderr` de una terminal local hacia un socket remoto.
 
 2. **Listener (Atacante):**
@@ -17,8 +17,6 @@ El diseño de esta herramienta sigue una estrategia estándar de Comando y Contr
 
 Una Reverse Shell se diferencia de una Bind Shell en que es la **víctima** quien inicia proactivamente la conexión hacia el **atacante**. Esto sortea muchas de las barreras de Firewalls tradicionales (NAT), ya que el tráfico de salida (Egress) raramente se bloquea con la misma intensidad que el tráfico entrante (Ingress).
 
-## Consideraciones DevSecOps
+## Consideraciones de Seguridad
 
-Para protección profesional, los payloads (en la carpeta `src/`) junto con toda la infraestructura de configuración de tests se almacenan y ejecutan exclusivamente desde el repositorio privado (**GitLab**). 
-
-Al liberar en el portafolio de **GitHub**, el script de publicación omite estas carpetas para evitar flags automáticas o el uso malintencionado por terceros.
+Para protección profesional, los payloads y toda la infraestructura de configuración se gestionan siguiendo principios de DevSecOps, utilizando análisis estático (SAST) y pruebas automatizadas para garantizar la integridad del código antes de su despliegue.

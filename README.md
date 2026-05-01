@@ -2,10 +2,9 @@
 
 ![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat&logo=python&logoColor=white)
 ![PowerShell](https://img.shields.io/badge/PowerShell-Automation-5391FE?style=flat&logo=powershell&logoColor=white)
-![GitLab CI](https://img.shields.io/badge/GitLab_CI-DevSecOps-FC6D26?style=flat&logo=gitlab&logoColor=white)
 ![Bandit](https://img.shields.io/badge/SAST-Bandit-critical?style=flat&logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/License-GPL--3.0-red?style=flat&logo=gnu&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-0078D6?style=flat&logo=windows&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?style=flat&logo=github-actions&logoColor=white)
 
 ---
 
@@ -13,9 +12,10 @@
 
 Este proyecto implementa una **Reverse Shell multiplataforma** (Windows 10 y Linux) desarrollada en Python 3.9+, orientada a entornos de **laboratorio de ciberseguridad**, Red Teaming y análisis de seguridad ofensiva. La herramienta establece un canal de comunicación TCP inverso entre una máquina víctima y un atacante controlado, permitiendo la ejecución remota de comandos desde el host oyente.
 
-El proyecto se rige por una **estrategia DevSecOps dual**: el código operativo completo reside en un laboratorio GitLab (fuente de la verdad), mientras que GitHub actúa como portafolio arquitectónico sanitizado. La transición entre entornos está gobernada por un script PowerShell automatizado (`publish_public.ps1`) que elimina artefactos sensibles antes de cualquier publicación pública.
+El proyecto sigue una **estrategia DevSecOps moderna**, integrando controles de seguridad y calidad directamente en el flujo de desarrollo. GitHub actúa como el repositorio central tanto para el desarrollo como para la presentación profesional.
 
-> ⚠️ **Uso Responsable:** Este proyecto es exclusivamente para fines educativos, investigación y laboratorios controlados. Su ejecución en sistemas sin autorización explícita del propietario es ilegal.
+> [!IMPORTANT]
+> **Uso ético:** Este proyecto tiene fines exclusivamente educativos y éticos en materia de ciberseguridad. El uso no autorizado de estas técnicas contra sistemas sin permiso explícito es ilegal y poco ético. El autor no se responsabiliza del mal uso de esta herramienta.
 
 ---
 
@@ -23,9 +23,8 @@ El proyecto se rige por una **estrategia DevSecOps dual**: el código operativo 
 
 - **Reverse Shell TCP** implementada en Python mediante los módulos `socket` y `subprocess`, con soporte para comunicación bidireccional entre cliente y listener
 - **Soporte multiplataforma**: payloads funcionales tanto para Windows 10 (scripts Batch/PowerShell) como para entornos Linux (Bash/Shell)
-- **Pipeline CI/CD de seguridad** en GitLab con etapas de linting (`ruff`, `shellcheck`), validación de secretos, pruebas funcionales (`pytest`) y análisis estático (`bandit`)
-- **Script de publicación sanitizada** (`publish_public.ps1`) que genera ramas efímeras, expurga código ofensivo y sincroniza únicamente artefactos seguros hacia GitHub
-- **Suite de pruebas automatizadas** en `tests/` basada en `pytest` para verificar el comportamiento funcional de los módulos Python
+- **Pipeline CI/CD de seguridad** con etapas de linting (`ruff`, `shellcheck`), validación de secretos, pruebas funcionales (`pytest`) y análisis estático (`bandit`)
+
 - **Documentación técnica estructurada** en `docs/` con pseudocódigo y manuales de arquitectura
 - **Diagramas de arquitectura** en formato Markdown dentro de `diagrams/` para representar flujos de conexión y topología de red
 - **Control estricto de secretos** mediante `.gitignore` configurado para excluir binarios compilados, configuraciones locales y artefactos de entorno
@@ -46,8 +45,8 @@ El proyecto se rige por una **estrategia DevSecOps dual**: el código operativo 
 | Linting Shell | Shellcheck | Análisis estático de scripts Bash |
 | Testing | Pytest | Suite de pruebas funcionales automatizadas |
 | Code Quality | Pre-commit | Pipeline local automático antes de cada commit |
-| CI/CD | GitLab CI (`.gitlab-ci.yml`) | Pipeline de integración continua y validación |
-| Control de versiones | Git (GitHub + GitLab) | Gestión de fuente con estrategia dual-repo |
+| CI/CD | GitHub Actions | Pipeline de integración continua y validación |
+| Control de versiones | Git (GitHub) | Gestión de fuente centralizada |
 
 ---
 
@@ -64,80 +63,52 @@ El proyecto se rige por una **estrategia DevSecOps dual**: el código operativo 
 - Python 3.9+ (si se ejecuta el payload `.py`)
 - O bien solo el intérprete de comandos (`cmd.exe`) si se usa el payload Batch
 
-### Clonar el repositorio completo (desde GitLab)
+### Configurar el entorno
 
-```bash
-git clone https://gitlab.com/group-cybersecurity-lab/Reverse-Shell.git
-cd Reverse-Shell
-```
+1. Clone el repositorio:
+   ```bash
+   git clone https://github.com/devsebastian44/Reverse-Shell.git
+   cd Reverse-Shell
+   ```
 
-### Configurar el entorno (Modernizado)
+2. Configure las variables de entorno:
+   ```bash
+   cp .env.example .env
+   # Edite el archivo .env con su LHOST y LPORT
+   ```
 
-```bash
-# Configuración inicial del entorno (Linux)
-sudo bash scripts/config.sh
-
-# Instalar dependencias del proyecto y herramientas de QA/Security
-pip install -e .[dev]
-
-# Activar pipeline de calidad local en Git (Ruff, Bandit, etc)
-pre-commit install
-```
-
-### Herramientas de sistema adicionales
-
-```bash
-apt install shellcheck   # Debian/Ubuntu (linting Bash)
-```
+3. Instale las dependencias:
+   ```bash
+   pip install .[dev]
+   pre-commit install
+   ```
 
 ---
 
 ## ▶️ Usage
 
-### 1. Iniciar el listener en la máquina atacante
-
+### 1. Iniciar el listener
+En la máquina atacante, use Netcat o una herramienta similar:
 ```bash
-# Escucha en todas las interfaces, puerto 4444, modo verboso
 nc -lvnp 4444
 ```
 
-### 2. Ejecutar el payload en la máquina víctima
-
-**Opción A — Python (Windows/Linux):**
+### 2. Ejecutar el payload
+En la máquina víctima:
 ```bash
-python3 src/reverse_shell.py
+python src/reverse_shell.py
 ```
 
-**Opción B — Batch script (Windows 10):**
-```cmd
-shell.bat
-```
-
-### 3. Verificar la conexión
-
-Una vez que el payload se ejecuta en la víctima, la máquina atacante recibe una shell interactiva. Los comandos se ejecutan remotamente en el sistema objetivo y la salida se devuelve al listener.
-
-### Ejecutar el pipeline de seguridad localmente
-
+### Ejecutar Pruebas y QA
 ```bash
-# Ejecutar pipeline completo de pre-commit (Ruff, Detect-secrets, Bandit, trailing-whitespaces) manual
-pre-commit run --all-files
-
-# Linting de scripts Bash
-shellcheck scripts/*.sh
-
-# Suite de pruebas
+# Ejecutar tests funcionales (usando mocks)
 pytest tests/ -v
+
+# Ejecutar linting y seguridad manual
+ruff check .
+bandit -r src/
 ```
 
-### Publicar versión sanitizada a GitHub
-
-```powershell
-# Desde PowerShell en el entorno GitLab
-.\scripts\publish_public.ps1
-```
-
-> Este script genera una rama temporal, elimina `src/`, `tests/`, `scripts/` y `.gitlab-ci.yml`, y realiza un push forzado hacia GitHub con solo la arquitectura documental.
 
 ---
 
@@ -146,17 +117,16 @@ pytest tests/ -v
 ```
 Reverse-Shell/
 │
-├── src/                        # Payloads operativos (solo en GitLab)
+├── src/                        # Payloads operativos
 │   └── reverse_shell.py        # Implementación Python de la reverse shell (socket + subprocess)
 │
-├── scripts/                    # Automatización DevSecOps (solo en GitLab)
-│   ├── publish_public.ps1      # Script PowerShell de publicación sanitizada a GitHub
+├── scripts/                    # Automatización DevSecOps
 │   └── config.sh               # Script Bash de configuración del entorno listener
 │
-├── configs/                    # Plantillas de configuración de infraestructura (solo en GitLab)
+├── configs/                    # Plantillas de configuración de infraestructura
 │   └── *.conf / *.env          # Variables de entorno y parámetros de red
 │
-├── tests/                      # Suite de pruebas automatizadas con pytest (solo en GitLab)
+├── tests/                      # Suite de pruebas automatizadas con pytest
 │   └── test_*.py               # Pruebas funcionales de los módulos Python
 │
 ├── docs/                       # Documentación técnica y pseudocódigo
@@ -165,13 +135,12 @@ Reverse-Shell/
 ├── diagrams/                   # Diagramas de flujo y topología de red en Markdown
 │   └── *.md                    # Representaciones de arquitectura de conexión TCP inversa
 │
-├── .gitlab-ci.yml              # Pipeline CI/CD (linting + SAST + tests) — solo en GitLab
+├── .github/workflows/          # Pipeline CI/CD (GitHub Actions)
 ├── .gitignore                  # Exclusión de binarios, secretos y artefactos locales
 ├── LICENSE                     # GNU General Public License v3.0
-└── README.md                   # Documentación pública del portafolio
+└── README.md                   # Documentación principal del proyecto
 ```
 
-> **Nota:** Los directorios `src/`, `scripts/`, `configs/`, `tests/` y el archivo `.gitlab-ci.yml` están presentes únicamente en el repositorio GitLab. El repositorio GitHub contiene exclusivamente `docs/`, `diagrams/`, `.gitignore`, `LICENSE` y `README.md` como portafolio arquitectónico sanitizado.
 
 ---
 
@@ -199,28 +168,18 @@ Este proyecto implementa técnicas de **acceso remoto no autorizado simulado** c
 
 ## 🌐 Repository Architecture
 
-Este proyecto sigue una arquitectura distribuida de doble repositorio orientada a DevSecOps:
-
-- **GitHub** → Portafolio público: documentación arquitectónica, diagramas y presentación profesional (sin código operativo)
-- **GitLab** → Laboratorio educativo completo: implementación funcional, pipeline CI/CD, tests y automatización
+Este proyecto está centralizado en GitHub, utilizando GitHub Actions para la validación continua y asegurando que tanto la documentación como el código fuente sigan estándares de calidad profesional.
 
 ```
-GitLab (Fuente de la Verdad)          GitHub (Portafolio Público)
-┌─────────────────────────┐           ┌──────────────────────────┐
-│ src/     → Payloads     │           │ docs/    → Documentación │
-│ scripts/ → Automatiz.   │──push──►  │ diagrams/→ Arquitectura  │
-│ tests/   → pytest       │ sanitiz.  │ LICENSE  → GPL-3.0       │
-│ .gitlab-ci.yml → CI/CD  │           │ README.md                │
-└─────────────────────────┘           └──────────────────────────┘
-         ▲
-    publish_public.ps1
-    (rama efímera + expurgo)
+          GitHub (Repositorio Central)
+          ┌──────────────────────────┐
+          │ src/     → Payloads      │
+          │ scripts/ → Automatiz.    │
+          │ tests/   → pytest        │
+          │ .github/ → CI/CD         │
+          │ README.md / docs/        │
+          └──────────────────────────┘
 ```
-
-### 🔗 Full Source Code
-
-👉 Código operativo completo disponible en GitLab: [https://gitlab.com/group-cybersecurity-lab/Reverse-Shell](https://gitlab.com/group-cybersecurity-lab/Reverse-Shell)
-
 ---
 
 ## 🚀 Roadmap
@@ -246,6 +205,18 @@ Consulta el archivo [`LICENSE`](./LICENSE) para los términos completos.
 
 ---
 
+## 🤝 Contributing
+
+¡Las contribuciones son bienvenidas! Para colaborar:
+
+1. Realice un **Fork** del proyecto.
+2. Cree una rama para su mejora (`git checkout -b feature/AmazingFeature`).
+3. Realice sus cambios y haga commit siguiendo los [Conventional Commits](https://www.conventionalcommits.org/).
+4. Haga **Push** a su rama (`git push origin feature/AmazingFeature`).
+5. Abra un **Pull Request** detallando sus cambios.
+
+---
+
 ## 👨‍💻 Author
 
 **Sebastian** — [`@devsebastian44`](https://github.com/devsebastian44)
@@ -255,7 +226,6 @@ Desarrollador e investigador en ciberseguridad con enfoque en Red Teaming, autom
 | Plataforma | Enlace |
 |---|---|
 | GitHub | [github.com/devsebastian44](https://github.com/devsebastian44) |
-| GitLab | [gitlab.com/group-cybersecurity-lab](https://gitlab.com/group-cybersecurity-lab) |
 
 ---
 
